@@ -20,7 +20,7 @@ The formula for reconstructing the curve is:
 $$f(t) = g(t) + ih(t) = \sum_{k=-\infty}^{\infty} c_k \cdot e^{i k t} \approx \sum_{k=-K}^{K} c_k \cdot e^{i k t} =  \sum_{k=-K}^{K} |c_k| (\cos(kt+\theta_k) + i \cdot \sin(kt+\theta_k)) $$
 
 Where:
-- $$c_k = \frac{1}{2\pi}\int_{-\pi}^{\pi} f(t) e^{- i k t} \mathrm{d}t $$ are the complex **Fourier coefficients**. Given that $$c_k = |c_k| e^{i \theta_k +2n\pi}$$, each one defines a circle :
+- $$c_k = \frac{1}{2\pi}\int_{-\pi}^{\pi} f(t) e^{- i k t} \mathrm{d}t $$ are the complex **Fourier coefficients**. Given that $$c_k = |c_k| e^{i \theta_k +2n\pi i}$$, each one defines a circle :
   - Radius of the epicycle: $$|c_k|$$
   - Phase (initial angle): $$\theta_k$$
   - Frequency (rotation speed): $$k$$
