@@ -2,7 +2,7 @@
 This project visualizes how any 2D drawing can be reconstructed using **epicycles** derived from the **Fourier series**. By computing the coefficients of the complex Fourier Series, the program creates an animation that traces the original drawing with rotating vectors.
 
 ## ✨ Features
-- Convert drawings (hand-drawn, functions, or points paths) into point data
+- Convert drawings (hand-drawn, functions, or .svg images) into point data
 - Compute Fourier coefficients
 - Animate epicycles that reconstruct the original figure
 - Adjustable number of frequency components
