@@ -3,8 +3,11 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 import numpy as np
 import matplotlib.image as mpimg
+from svgpathtools import svg2paths
+import numpy as np
 
-def numerical_integral_trapezoidal_rule(inf_limit, sup_limit, f, N=10000):
+
+def numerical_integral_trapezoidal_rule(inf_limit, sup_limit, f, N=1000):
     h=(sup_limit-inf_limit)/N
     sum_accum = (f(inf_limit) + f(inf_limit))/2
     xn = inf_limit
@@ -89,7 +92,7 @@ def animate_frame_2D(x, c_values, K, previous_points, g, h, M, ax, L, name):
     ax[1,1].set_ylabel('y')
 
     plt.suptitle(name + '\n' + 't = ' + "{:.2f}".format((x+math.pi)/(2*math.pi)))
-
+    
 def initFunction():
     return 
 
@@ -177,8 +180,6 @@ def draw(name, g, h, K, L, N=100, M=1000):
 # draw('Regular Heptagon', lambda x: polygone_x(x,7), lambda x: polygone_y(x,7), 10, 1.1)
 # draw('Regular Octagon', lambda x: polygone_x(x,8), lambda x: polygone_y(x,8), 10, 1.1)
 
-
-
 points = []
 
 # Function that is executed each time that a click on the script is listened
@@ -193,20 +194,38 @@ def onclick(event):
 fig, ax = plt.subplots()
 path = input('Insert the path of a background image (S for skip): ')
 
-if path !='S':
-    img = mpimg.imread(path)  # Usa un archivo .png o .jpg
-    ax.imshow(img, extent=[-10, 10, -10, 10], aspect='auto')
+if path[-4:]=='.svg':
+    paths, _ = svg2paths(path)
+    for path in paths:
+        for t in np.linspace(0, 1, 1000):
+            point = path.point(t)
+            x, y = point.real, point.imag
+            points.append((x, y))
+    min_x =min([point[0] for point in points])
+    max_x =max([point[0] for point in points])
+    min_y =min([point[1] for point in points])
+    max_y =max([point[1] for point in points])
+    max_xy=max(max_x, max_y)
+    min_xy=max(min_x, min_y)
+    x_list = [20*(point[0] - min_xy)/(max_xy - min_xy) - 10 for point in points]
+    y_list = [-(20*(point[1] - min_xy)/(max_xy - min_xy) - 10) for point in points]
+    points=list(zip(x_list, y_list))
 
-ax.set_title("Click to draw. Close the window when finished.")
-ax.set_xlim(-10, 10)
-ax.set_ylim(-10, 10)
-ax.grid(True)
+else:
+    if path !='S':
+        img = mpimg.imread(path)  # Usa un archivo .png o .jpg
+        ax.imshow(img, extent=[-10, 10, -10, 10], aspect='auto')
 
-# Conect click event with onclick function 
-cid = fig.canvas.mpl_connect('button_press_event', onclick)
+    ax.set_title("Click to draw. Close the window when finished.")
+    ax.set_xlim(-10, 10)
+    ax.set_ylim(-10, 10)
+    ax.grid(True)
 
-# Show pop-up window (blocked until it is closed)
-plt.show()
+    # Conect click event with onclick function 
+    cid = fig.canvas.mpl_connect('button_press_event', onclick)
+
+    # Show pop-up window (blocked until it is closed)
+    plt.show()
 num_epycicles = input('Introduce the number of epycicles: ')
 output = input('Name your animation: ')
-draw(output, lambda x: polygonal(list(np.array(points)[:,0]),x), lambda x: polygonal(list(np.array(points)[:,1]),x), int(num_epycicles), 10)
+draw(output, lambda x: polygonal(list(np.array(points)[:,0]),x), lambda x: polygonal(list(np.array(points)[:,1]),x), int(num_epycicles), 10,N=1000)
